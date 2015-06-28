@@ -19,7 +19,7 @@ public class ComServeur {
 
 	public static void main(String[] args) throws RemoteException,
 			AlreadyBoundException {
-
+		// CommServeur
 		CommManager commManager = new CommManager();
 		Registry registry1 = LocateRegistry
 				.createRegistry(Constants.COMM_RMI_PORT);
