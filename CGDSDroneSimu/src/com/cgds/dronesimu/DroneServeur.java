@@ -27,7 +27,7 @@ public class DroneServeur {
 
 	public static void main(String[] args) throws RemoteException,
 			AlreadyBoundException, NotBoundException {
-		//Test tuto
+		
 		Drone drone1 = new Drone(Constants.DRONE1_RMI_ID);
 		Drone drone2 = new Drone(Constants.DRONE2_RMI_ID);
 
