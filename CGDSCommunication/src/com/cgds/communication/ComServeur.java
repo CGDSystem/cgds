@@ -26,6 +26,7 @@ public class ComServeur {
 		registry1.bind(Constants.COMM_RMI_ID, commManager);
 		ComServeur comServeur = new ComServeur();
 		comServeur.new VerifierConnexionThread(commManager).start();
+		new CommSocketServeur(commManager).start();
 		// Registry registry2 =
 		// LocateRegistry.getRegistry("localhost",Constants.DRONE_RMI_PORT);
 		// DroneInt drone1 = null;

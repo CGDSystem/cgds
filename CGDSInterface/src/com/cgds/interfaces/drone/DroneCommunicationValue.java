@@ -7,9 +7,9 @@ import java.util.List;
 public class DroneCommunicationValue implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = 1L;
-	private String id;
-	private List<String> infos;
-	private byte[] image;
+	private String id = null;
+	private List<String> infos = null;
+	private byte[] image = null;;
 
 	public String getId() {
 		return id;

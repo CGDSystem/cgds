@@ -40,12 +40,13 @@ public class PosteControleConnection extends UnicastRemoteObject implements
 			throws RemoteException {
 		try {
 			System.out.println(updateMsg.getId());
-			if (supervision != null)
+			if (supervision != null && updateMsg.getInfos() != null)
 				supervision.update(updateMsg.getInfos());
-			if (visualisation != null)
+			if (visualisation != null && updateMsg.getImage() != null)
 				visualisation.update(updateMsg.getImage());
 		} catch (Exception e) {
 			controller.deconnexionFermetureInterface(this);
 		}
 	}
+
 }

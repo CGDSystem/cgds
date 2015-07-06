@@ -10,5 +10,6 @@ public class Constants {
 	//Données necessaire à tous les projets
 	public static String COMM_RMI_ID = "CommID";
 	public static int COMM_RMI_PORT = 10000;
+	public static int COMM_SOCKET_PORT = 11000;
 	
 }

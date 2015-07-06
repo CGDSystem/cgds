@@ -8,6 +8,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import com.cgds.communication.client.CommClientObservable;
+import com.cgds.communication.drone.CommDroneInterface;
+import com.cgds.communication.drone.CommDroneMorseInterface;
+import com.cgds.communication.drone.DroneCommunicationInt;
 import com.cgds.interfaces.communication.CommManagerInt;
 import com.cgds.interfaces.drone.DroneInt;
 import com.cgds.interfaces.postecontrole.PosteControleInt;
@@ -16,8 +20,9 @@ public class CommManager extends UnicastRemoteObject implements CommManagerInt, 
 
 	private static final long serialVersionUID = 1L;
 
+	int nbDrone = 0;
 	HashMap<String, CommClientObservable> dronesObservable;
-	HashMap<String, CommDroneInterface> dronesInterfaces;
+	HashMap<String, DroneCommunicationInt> dronesInterfaces;
 
 	protected CommManager() throws RemoteException {
 		super();
@@ -33,11 +38,20 @@ public class CommManager extends UnicastRemoteObject implements CommManagerInt, 
 
 	public void ajouterDrone (DroneInt drone) throws RemoteException{
 		CommClientObservable clientObservable = new CommClientObservable();
-		dronesObservable.put(drone.getNom(), clientObservable);
 		CommDroneInterface droneInterface = new CommDroneInterface(drone, clientObservable);
-		dronesInterfaces.put(drone.getNom(), droneInterface);
+		String droneNom = "Drone"+nbDrone++;
+		dronesObservable.put(droneNom, clientObservable);
+		dronesInterfaces.put(droneNom, droneInterface);
 	}
-
+	
+	public CommClientObservable ajouterDroneSocket (CommDroneMorseInterface morseInt) throws RemoteException{
+		CommClientObservable clientObservable = new CommClientObservable();
+		String droneNom = "Drone"+nbDrone++;
+		dronesObservable.put(droneNom, clientObservable);
+		dronesInterfaces.put(droneNom, morseInt);
+		return clientObservable;
+	}
+	
 	public void envoyerCommande(String droneNom, String... args) throws RemoteException {
 		dronesInterfaces.get(droneNom).envoyerCommande(args);
 		
@@ -52,7 +66,7 @@ public class CommManager extends UnicastRemoteObject implements CommManagerInt, 
 	public void verifierConnexion(){
 		HashSet<String> listeDrones = new HashSet<>(dronesInterfaces.keySet());
 		for (String droneNom : listeDrones) {
-			CommDroneInterface commDrone = this.dronesInterfaces.get(droneNom);
+			DroneCommunicationInt  commDrone = this.dronesInterfaces.get(droneNom);
 			if(!commDrone.ping()){
 				dronesObservable.remove(droneNom);
 				dronesInterfaces.remove(droneNom);

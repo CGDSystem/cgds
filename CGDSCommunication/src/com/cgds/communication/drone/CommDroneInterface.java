@@ -1,4 +1,4 @@
-package com.cgds.communication;
+package com.cgds.communication.drone;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
@@ -6,11 +6,12 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.cgds.communication.client.CommClientObservable;
 import com.cgds.interfaces.communication.CommDroneInt;
 import com.cgds.interfaces.drone.DroneCommunicationValue;
 import com.cgds.interfaces.drone.DroneInt;
 
-public class CommDroneInterface extends UnicastRemoteObject implements CommDroneInt, Serializable {
+public class CommDroneInterface extends UnicastRemoteObject implements CommDroneInt, DroneCommunicationInt, Serializable {
 	
 
 	private static final long serialVersionUID = 1L;
@@ -18,7 +19,7 @@ public class CommDroneInterface extends UnicastRemoteObject implements CommDrone
 	private CommClientObservable clientObservable;
 	private String droneNom = null;
 
-	protected CommDroneInterface(DroneInt drone,CommClientObservable clientObservable) throws RemoteException {
+	public CommDroneInterface(DroneInt drone,CommClientObservable clientObservable) throws RemoteException {
 		super();
 		this.clientObservable = clientObservable;
 		droneInt = drone;
@@ -46,8 +47,13 @@ public class CommDroneInterface extends UnicastRemoteObject implements CommDrone
 		
 	}
 	
-	public void envoyerCommande(String... args) throws RemoteException {
-		droneInt.recevoirCommande(args);
+	public void envoyerCommande(String... args) {
+		try {
+			droneInt.recevoirCommande(args);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public Boolean ping(){

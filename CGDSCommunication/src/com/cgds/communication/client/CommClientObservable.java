@@ -1,4 +1,4 @@
-package com.cgds.communication;
+package com.cgds.communication.client;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
@@ -12,18 +12,27 @@ import java.util.Observer;
 
 import com.cgds.interfaces.drone.DroneCommunicationValue;
 import com.cgds.interfaces.postecontrole.PosteControleInt;
-
+/**
+ * L'objet produit par cette classe:
+ * 	 est une interface entre un PosteDeControle et un CommDroneInterface
+ * 	 est un adaptateur d'Observable pour un CommDroneInterface
+ *	 produit un adaptateur d'Observeur à un PosteDeControle
+ * @author hps
+ *
+ */
 public class CommClientObservable extends Observable{
 	
 	
-	protected CommClientObservable() throws RemoteException {
+	public CommClientObservable() throws RemoteException {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
 
 	public void addObserver(PosteControleInt observer) throws RemoteException {
+		//Création de l'adaptateur du poste de controle à abonner
 		WrappedObserver obs = new WrappedObserver(observer);
+		//Abonnement du WrappedObserver à CommClientObservable
         addObserver(obs);
         System.out.println("Connexion avec un poste de controle");
 		
@@ -31,9 +40,32 @@ public class CommClientObservable extends Observable{
 	
 	public void notifier(final DroneCommunicationValue message) {
 		setChanged();
+		//Appel de la méthode update des Observer (qui sont des WrappedObserver de PosteDeControle)
 		notifyObservers(message);
-}
+	}
 	
+	public void notifierImage(final byte[] image) {
+		setChanged();
+		DroneCommunicationValue message = new DroneCommunicationValue();
+		message.setImage(image);
+		//Appel de la méthode update des Observer (qui sont des WrappedObserver de PosteDeControle)
+		notifyObservers(message);
+	}
+	
+	public void notifierInfo(final List<String> infos) {
+		setChanged();
+		DroneCommunicationValue message = new DroneCommunicationValue();
+		message.setInfos(infos);
+		//Appel de la méthode update des Observer (qui sont des WrappedObserver de PosteDeControle)
+		notifyObservers(message);
+	}
+	/**
+	 * Adaptateur - PosteDeControle/Observer 
+	 * Appel la methode update du Poste de controle distant
+	 * 
+	 * @author hps
+	 *
+	 */
 	private class WrappedObserver implements Observer, Serializable {
 
         private static final long serialVersionUID = 1L;

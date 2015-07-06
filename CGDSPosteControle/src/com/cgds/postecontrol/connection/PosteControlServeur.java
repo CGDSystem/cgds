@@ -1,14 +1,10 @@
 package com.cgds.postecontrol.connection;
 
-import java.rmi.AlreadyBoundException;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 import com.cgds.interfaces.Constants;
 import com.cgds.interfaces.communication.CommManagerInt;
-import com.cgds.interfaces.postecontrole.PosteControleInt;
 import com.cgds.postecontrol.ihm.Accueil;
 
 

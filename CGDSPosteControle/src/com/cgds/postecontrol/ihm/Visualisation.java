@@ -2,6 +2,7 @@ package com.cgds.postecontrol.ihm;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
 import java.awt.image.DirectColorModel;
 import java.awt.image.IndexColorModel;
 import java.awt.image.WritableRaster;
@@ -23,6 +24,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
+import org.opencv.core.Mat;
 
 public class Visualisation {
 
@@ -107,6 +109,23 @@ public class Visualisation {
 			}
 
 		}
+		
+		public BufferedImage toBufferedImage(byte[] raw_data){
+			Mat mat = new Mat();
+		    mat.put(0, 0, raw_data);
+	        int type = BufferedImage.TYPE_BYTE_GRAY;
+	        if ( mat.channels() > 1 ) {
+	            type = BufferedImage.TYPE_3BYTE_BGR;
+	        }
+	        int bufferSize = mat.channels()*mat.cols()*mat.rows();
+	        byte [] b = new byte[bufferSize];
+	        mat.get(0,0,b); // get all the pixels
+	        BufferedImage image = new BufferedImage(mat.cols(),mat.rows(), type);
+	        final byte[] targetPixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
+	        System.arraycopy(b, 0, targetPixels, 0, b.length);  
+	        return image;
+
+	    }
 		
 		public ImageData convertToSWT(BufferedImage bufferedImage) {
 			if (bufferedImage.getColorModel() instanceof DirectColorModel) {
