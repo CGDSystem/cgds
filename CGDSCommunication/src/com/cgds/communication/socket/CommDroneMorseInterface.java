@@ -1,4 +1,4 @@
-package com.cgds.communication.drone;
+package com.cgds.communication.socket;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,8 +10,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 
-import com.cgds.communication.CommManager;
 import com.cgds.communication.client.CommClientObservable;
+import com.cgds.communication.drone.DroneCommunicationInt;
+import com.cgds.communication.rmi.CommManager;
 
 public class CommDroneMorseInterface implements DroneCommunicationInt, Runnable {
 	
@@ -51,29 +52,33 @@ public class CommDroneMorseInterface implements DroneCommunicationInt, Runnable 
 	    {
 	      // la lecture des données entrantes se fait caractère par caractère ...
 	      // ... jusqu'à trouver un caractère de fin de chaine
-	      char charCur[] = new char[1]; // déclaration d'un tableau de char d'1 élement, _in.read() y stockera le char lu
+	      char charCur[] = new char[131072]; // déclaration d'un tableau de char d'1 élement, _in.read() y stockera le char lu
 	      boolean typeTrouve = false;
-	      while(_in.read(charCur)!=-1) // attente en boucle des messages provenant du client (bloquant sur _in.read())
+	      while(_in.read(charCur,0,131072)!=-1) // attente en boucle des messages provenant du client (bloquant sur _in.read())
 	      {
-			String raw = new String(charCur);
-			String typeMessage = raw.substring(0,3);
-			
-			if(typeMessage.equals("IMG") || typeMessage.equals("INF")){
-				if(typeMessage.equals("IMG")){
-					_commClientObservable.notifierImage(Base64.getDecoder().decode(raw.substring(3)));
-				}else if(typeMessage.equals("INF")){
-					String[] array = raw.substring(3).split(",");
-					ArrayList<String> listInfos = new ArrayList<String>(Arrays.asList(array));
-					_commClientObservable.notifierInfo(listInfos);
-				}
-			}
+	    	//System.out.println(charCur);
+	    	_commClientObservable.notifierImage(stringToBytesUTFCustom(charCur));
+//			String raw = new String(charCur);
+//			String typeMessage = raw.substring(0,3);
+//			System.out.println(typeMessage);
+//			if(typeMessage.equals("IMG") || typeMessage.equals("INF")){
+//				if(typeMessage.equals("IMG")){
+//					_commClientObservable.notifierImage(Base64.getDecoder().decode(raw.substring(3)));
+//				}else if(typeMessage.equals("INF")){
+//					String[] array = raw.substring(3).split(",");
+//					ArrayList<String> listInfos = new ArrayList<String>(Arrays.asList(array));
+//					_commClientObservable.notifierInfo(listInfos);
+//				}
+//			}
 	   
 //	          _blablaServ.sendAll(message,""+charCur[0]);
 //	          else _blablaServ.sendAll(message,""); // sinon on envoi le message à tous
-			message = ""; // on vide la chaine de message pour qu'elle soit réutilisée
+//			message = ""; // on vide la chaine de message pour qu'elle soit réutilisée
 	      }
 	    }
-	    catch (Exception e){ }
+	    catch (Exception e){
+	    	e.printStackTrace();
+	    }
 	    finally // finally se produira le plus souvent lors de la deconnexion du client
 	    {
 	      try
@@ -86,6 +91,17 @@ public class CommDroneMorseInterface implements DroneCommunicationInt, Runnable 
 	      catch (IOException e){ }
 	    }
 	  }
+	
+	public static byte[] stringToBytesUTFCustom(char[] buffer) {
+		byte[] b = new byte[buffer.length << 1];
+		for (int i = 0; i < buffer.length; i++) {
+			int bpos = i << 1;
+			b[bpos] = (byte) ((buffer[i] & 0xFF00) >> 8);
+			b[bpos + 1] = (byte) (buffer[i] & 0x00FF);
+		}
+		return b;
+	}
+
 	private void sendImage(byte[] image){
 //		_commClientObservable.
 	}
@@ -99,6 +115,6 @@ public class CommDroneMorseInterface implements DroneCommunicationInt, Runnable 
 	@Override
 	public Boolean ping() {
 		// TODO Auto-generated method stub
-		return null;
+		return true;
 	}
 }

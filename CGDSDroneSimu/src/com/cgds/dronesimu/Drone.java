@@ -1,6 +1,5 @@
 package com.cgds.dronesimu;
 
-import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -9,7 +8,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import com.cgds.interfaces.communication.CommDroneInt;
-import com.cgds.interfaces.drone.DroneCommunicationValue;
+import com.cgds.interfaces.communication.DroneCommunicationValue;
 import com.cgds.interfaces.drone.DroneInt;
 
 public class Drone extends Observable implements DroneInt, Serializable {
@@ -35,7 +34,7 @@ public class Drone extends Observable implements DroneInt, Serializable {
 		return nom;
 	}
 
-	private void setNom(String nom) {
+	public void setNom(String nom) {
 		this.nom = nom;
 	}
 

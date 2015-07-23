@@ -11,35 +11,37 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observer;
 
+import com.cgds.communication.rmi.CommManager;
+import com.cgds.communication.socket.CommSocketServeur;
 import com.cgds.interfaces.Constants;
 import com.cgds.interfaces.communication.CommManagerInt;
+import com.cgds.interfaces.detection.CalculCommInt;
+import com.cgds.interfaces.detection.CalculCommManagerInt;
 import com.cgds.interfaces.drone.DroneInt;
 
-public class ComServeur {
+public class CommServeur {
 
 	public static void main(String[] args) throws RemoteException,
-			AlreadyBoundException {
+			AlreadyBoundException, NotBoundException {
 		// CommServeur
 		CommManager commManager = new CommManager();
 		Registry registry1 = LocateRegistry
 				.createRegistry(Constants.COMM_RMI_PORT);
 		registry1.bind(Constants.COMM_RMI_ID, commManager);
-		ComServeur comServeur = new ComServeur();
+		
+		// Detection
+		Registry registry2 = LocateRegistry.getRegistry("localhost",
+				Constants.CALCUL_RMI_PORT);
+		CalculCommManagerInt detectionInterface = (CalculCommManagerInt) registry2
+				.lookup(Constants.CALCUL_RMI_ID);
+		commManager.definirDetection(detectionInterface);
+		
+		//Vérification Connexion
+		CommServeur comServeur = new CommServeur();
 		comServeur.new VerifierConnexionThread(commManager).start();
+		
+		//Lancement du serveur de Socket
 		new CommSocketServeur(commManager).start();
-		// Registry registry2 =
-		// LocateRegistry.getRegistry("localhost",Constants.DRONE_RMI_PORT);
-		// DroneInt drone1 = null;
-		// DroneInt drone2 = null;
-		// try {
-		// drone1 = (DroneInt) registry2.lookup(Constants.DRONE1_RMI_ID);
-		// drone2 = (DroneInt) registry2.lookup(Constants.DRONE2_RMI_ID);
-		// } catch (NotBoundException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		// droneInterface.addDrone(drone1);
-		// droneInterface.addDrone(drone2);
 	}
 
 	public class VerifierConnexionThread extends Thread {

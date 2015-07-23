@@ -1,4 +1,4 @@
-package com.cgds.communication;
+package com.cgds.communication.rmi;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
@@ -9,10 +9,11 @@ import java.util.HashSet;
 import java.util.List;
 
 import com.cgds.communication.client.CommClientObservable;
-import com.cgds.communication.drone.CommDroneInterface;
-import com.cgds.communication.drone.CommDroneMorseInterface;
 import com.cgds.communication.drone.DroneCommunicationInt;
+import com.cgds.communication.socket.CommDroneMorseInterface;
 import com.cgds.interfaces.communication.CommManagerInt;
+import com.cgds.interfaces.detection.CalculCommInt;
+import com.cgds.interfaces.detection.CalculCommManagerInt;
 import com.cgds.interfaces.drone.DroneInt;
 import com.cgds.interfaces.postecontrole.PosteControleInt;
 
@@ -23,8 +24,9 @@ public class CommManager extends UnicastRemoteObject implements CommManagerInt, 
 	int nbDrone = 0;
 	HashMap<String, CommClientObservable> dronesObservable;
 	HashMap<String, DroneCommunicationInt> dronesInterfaces;
+	CalculCommManagerInt detection = null;
 
-	protected CommManager() throws RemoteException {
+	public CommManager() throws RemoteException {
 		super();
 		dronesObservable = new HashMap<>();
 		dronesInterfaces = new HashMap<>();
@@ -34,14 +36,24 @@ public class CommManager extends UnicastRemoteObject implements CommManagerInt, 
 	
 	public void abonnerPosteDeControle (PosteControleInt poste, String droneNom) throws RemoteException{
 		dronesObservable.get(droneNom).addObserver(poste);
+		detection.abonnerPosteDeControle(poste, droneNom);
 	}
 
+	public void definirDetection(CalculCommManagerInt detection){
+		this.detection = detection;
+		
+	}
+	
 	public void ajouterDrone (DroneInt drone) throws RemoteException{
+		CalculCommInt calculComm = null;
+		if(this.detection != null){
+			calculComm = this.detection.ajouterDrone(drone.getNom());		
+		}
 		CommClientObservable clientObservable = new CommClientObservable();
-		CommDroneInterface droneInterface = new CommDroneInterface(drone, clientObservable);
-		String droneNom = "Drone"+nbDrone++;
-		dronesObservable.put(droneNom, clientObservable);
-		dronesInterfaces.put(droneNom, droneInterface);
+		CommDroneInterface droneInterface = new CommDroneInterface(drone, clientObservable,calculComm);
+
+		dronesObservable.put(drone.getNom(), clientObservable);
+		dronesInterfaces.put(drone.getNom(), droneInterface);
 	}
 	
 	public CommClientObservable ajouterDroneSocket (CommDroneMorseInterface morseInt) throws RemoteException{

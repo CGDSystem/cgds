@@ -1,4 +1,4 @@
-package com.cgds.communication.drone;
+package com.cgds.communication.rmi;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
@@ -7,8 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.cgds.communication.client.CommClientObservable;
+import com.cgds.communication.drone.DroneCommunicationInt;
 import com.cgds.interfaces.communication.CommDroneInt;
-import com.cgds.interfaces.drone.DroneCommunicationValue;
+import com.cgds.interfaces.communication.DroneCommunicationValue;
+import com.cgds.interfaces.detection.CalculCommInt;
 import com.cgds.interfaces.drone.DroneInt;
 
 public class CommDroneInterface extends UnicastRemoteObject implements CommDroneInt, DroneCommunicationInt, Serializable {
@@ -18,14 +20,18 @@ public class CommDroneInterface extends UnicastRemoteObject implements CommDrone
 	private DroneInt droneInt = null;
 	private CommClientObservable clientObservable;
 	private String droneNom = null;
+	private CalculCommInt detectionCommunication = null;
 
-	public CommDroneInterface(DroneInt drone,CommClientObservable clientObservable) throws RemoteException {
+	public CommDroneInterface(DroneInt drone,CommClientObservable clientObservable,CalculCommInt detectionCommunication) throws RemoteException {
 		super();
 		this.clientObservable = clientObservable;
 		droneInt = drone;
 		drone.addObserver(this);
 		droneNom = drone.getNom();
 		System.out.println("Connexion avec " + droneNom);
+		if(detectionCommunication != null){
+			this.detectionCommunication = detectionCommunication; 
+		}
 	}
 
 
@@ -42,7 +48,13 @@ public class CommDroneInterface extends UnicastRemoteObject implements CommDrone
 			messageBuild.append(" ");
 		}
 		
-		System.out.println("CommDroneInterface - Message recu de "+droneNom+": " + messageBuild.toString());
+		boolean detectionOK = false;
+		if(detectionCommunication != null){
+			this.detectionCommunication.updateImage(updateMsg);
+			detectionOK = true;
+		}
+		
+		System.out.println("CommDroneInterface - Message recu de "+droneNom+" Detection: " + (detectionOK?"OK":"KO"));
 		clientObservable.notifier(updateMsg);
 		
 	}

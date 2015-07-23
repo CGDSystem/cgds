@@ -14,8 +14,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
-import com.cgds.postecontrol.connection.PosteControleConnection;
-import com.cgds.postecontrol.connection.PosteDeControleController;
+import com.cgds.postecontrol.rmi.PosteControleConnection;
+import com.cgds.postecontrol.rmi.PosteDeControleController;
 
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;

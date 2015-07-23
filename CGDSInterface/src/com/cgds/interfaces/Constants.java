@@ -12,4 +12,7 @@ public class Constants {
 	public static int COMM_RMI_PORT = 10000;
 	public static int COMM_SOCKET_PORT = 11000;
 	
+	public static String CALCUL_RMI_ID = "CalculID";
+	public static int CALCUL_RMI_PORT = 10002;
+	
 }

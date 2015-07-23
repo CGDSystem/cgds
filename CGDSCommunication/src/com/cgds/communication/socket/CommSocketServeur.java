@@ -1,8 +1,8 @@
-package com.cgds.communication;
+package com.cgds.communication.socket;
 
 import java.net.ServerSocket;
 
-import com.cgds.communication.drone.CommDroneMorseInterface;
+import com.cgds.communication.rmi.CommManager;
 import com.cgds.interfaces.Constants;
 
 public class CommSocketServeur extends Thread{

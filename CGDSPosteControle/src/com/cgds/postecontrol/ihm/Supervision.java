@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-import com.cgds.postecontrol.connection.PosteControleConnection;
+import com.cgds.postecontrol.rmi.PosteControleConnection;
 
 public class Supervision {
 

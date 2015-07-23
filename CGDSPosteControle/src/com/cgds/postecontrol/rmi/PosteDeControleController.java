@@ -1,4 +1,4 @@
-package com.cgds.postecontrol.connection;
+package com.cgds.postecontrol.rmi;
 
 import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
@@ -9,6 +9,7 @@ import java.util.List;
 import com.cgds.interfaces.Constants;
 import com.cgds.interfaces.communication.CommManagerInt;
 import com.cgds.postecontrol.ihm.Supervision;
+import com.cgds.postecontrol.ihm.VisuSwg;
 import com.cgds.postecontrol.ihm.Visualisation;
 
 public class PosteDeControleController {
@@ -46,6 +47,17 @@ public class PosteDeControleController {
 		}
 	}
 
+	
+	public void creerConnexionVisuSwg(String nomDrone, VisuSwg visualisation) {
+
+		try {
+			PosteControleConnection posteControle = null;
+			posteControle = new PosteControleConnection(visualisation,this);
+			commManager.abonnerPosteDeControle(posteControle,nomDrone);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	public String[] listeDrones() {
 		List<String> listeDrones = new ArrayList<>();

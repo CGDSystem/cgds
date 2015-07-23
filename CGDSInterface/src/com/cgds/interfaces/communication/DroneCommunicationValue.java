@@ -1,11 +1,21 @@
-package com.cgds.interfaces.drone;
+package com.cgds.interfaces.communication;
 
-import java.awt.image.BufferedImage;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-public class DroneCommunicationValue implements Serializable, Cloneable {
+public class DroneCommunicationValue implements Serializable {
 
+	public DroneCommunicationValue(){
+		
+	}
+	//Copy Constructor
+	public DroneCommunicationValue(DroneCommunicationValue value){
+		setId(new String(value.id));
+		setInfos(new ArrayList<String>(value.infos));
+		setImage(value.image.clone());
+	}
+	
 	private static final long serialVersionUID = 1L;
 	private String id = null;
 	private List<String> infos = null;

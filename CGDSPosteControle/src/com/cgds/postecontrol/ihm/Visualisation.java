@@ -1,6 +1,7 @@
 package com.cgds.postecontrol.ihm;
 
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.awt.image.DirectColorModel;
@@ -13,9 +14,10 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.RGB;
@@ -24,19 +26,27 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
+import org.opencv.core.Core;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.eclipse.swt.widgets.Label;
 
 public class Visualisation {
 
 	protected Object result;
 	protected Shell shell;
 	private String nomDrone;
+	Label lblNewLabel;
 
 	private Composite composite;
 	
 	public Visualisation(Display display, String nomDrone) {
+		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		this.nomDrone = nomDrone;
 		shell = new Shell(display, SWT.CLOSE);
+		
+//		lblNewLabel = new Label(shell, SWT.NONE);
+//		lblNewLabel.setBounds(0, 0, 394, 272);
 		createContents();
 		shell.open();
         shell.addListener(SWT.Close, new Listener()
@@ -82,6 +92,11 @@ public class Visualisation {
 		public void run() {
 
 			try {
+//				Mat mat = new Mat(320,240,CvType.CV_8UC3);
+//				mat.put(320, 240, image);
+//				
+//				Image bufferedImage = Mat2BufferedImage(mat);
+//				ImageIcon icon=new ImageIcon(bufferedImage);   
 				ByteArrayInputStream in = new ByteArrayInputStream(image);
 		        Iterator<?> readers = ImageIO.getImageReadersByFormatName("png");
 		        
@@ -101,16 +116,38 @@ public class Visualisation {
 			    bGr.drawImage(image, 0, 0, null);
 			    bGr.dispose();
 				ImageData imageData = convertToSWT(bufferedImage);
-				Image byteImage = new Image(composite.getDisplay(), imageData );
+				org.eclipse.swt.graphics.Image byteImage = new org.eclipse.swt.graphics.Image(composite.getDisplay(), imageData );
 				composite.setBackgroundImage(byteImage);
+				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
 		}
+
+		public Image Mat2BufferedImage(Mat m) {
+			// source:
+			// http://answers.opencv.org/question/10344/opencv-java-load-image-to-gui/
+			// Fastest code
+			// The output can be assigned either to a BufferedImage or to an
+			// Image
+
+			int type = BufferedImage.TYPE_BYTE_GRAY;
+			if (m.channels() > 1) {
+				type = BufferedImage.TYPE_3BYTE_BGR;
+			}
+			int bufferSize = m.channels() * m.cols() * m.rows();
+			byte[] b = new byte[bufferSize];
+			m.get(0, 0, b); // get all the pixels
+			BufferedImage image = new BufferedImage(m.cols(), m.rows(), type);
+			final byte[] targetPixels = ((DataBufferByte) image.getRaster()
+					.getDataBuffer()).getData();
+			System.arraycopy(b, 0, targetPixels, 0, b.length);
+			return image;
+		}
 		
-		public BufferedImage toBufferedImage(byte[] raw_data){
+		public Image toBufferedImage(byte[] raw_data){
 			Mat mat = new Mat();
 		    mat.put(0, 0, raw_data);
 	        int type = BufferedImage.TYPE_BYTE_GRAY;

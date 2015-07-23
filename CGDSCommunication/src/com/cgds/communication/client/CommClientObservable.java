@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-import com.cgds.interfaces.drone.DroneCommunicationValue;
+import com.cgds.interfaces.communication.DroneCommunicationValue;
 import com.cgds.interfaces.postecontrole.PosteControleInt;
 /**
  * L'objet produit par cette classe:
@@ -23,13 +23,13 @@ import com.cgds.interfaces.postecontrole.PosteControleInt;
 public class CommClientObservable extends Observable{
 	
 	
-	public CommClientObservable() throws RemoteException {
+	public CommClientObservable() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
 
-	public void addObserver(PosteControleInt observer) throws RemoteException {
+	public void addObserver(PosteControleInt observer) {
 		//Création de l'adaptateur du poste de controle à abonner
 		WrappedObserver obs = new WrappedObserver(observer);
 		//Abonnement du WrappedObserver à CommClientObservable
@@ -79,8 +79,7 @@ public class CommClientObservable extends Observable{
         @Override
         public void update(Observable o, Object arg) {
             try {
-                ro.droneUpdate((DroneCommunicationValue) arg);
-                ((DroneCommunicationValue) arg).getId();
+                ro.droneUpdate(new DroneCommunicationValue((DroneCommunicationValue) arg));
             } catch (RemoteException e) {
                 System.out
                         .println("Remote exception removing observer:" + this);

@@ -36,12 +36,15 @@ public class DroneServeur {
 		drone1.setGps("123 456");
 		drone1.setIntensiteSignal(0.25d);
 		drone1.setMission("Test");
-
+		drone1.setNom("Drone1RMI");
+		
 		drone2.setBatterie(0.4d);
 		drone2.setDirection("SE");
 		drone2.setGps("321 654");
 		drone2.setIntensiteSignal(0.8d);
 		drone2.setMission("Test");
+		drone1.setNom("Drone2RMI");
+
 		// Registry registry = LocateRegistry
 		// .createRegistry(Constants.DRONE_RMI_PORT);
 		//
