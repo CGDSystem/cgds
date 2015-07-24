@@ -11,6 +11,7 @@ import java.util.Observable;
 import com.cgds.interfaces.communication.DroneCommunicationValue;
 import com.cgds.interfaces.detection.DetectionAlerteValue;
 import com.cgds.interfaces.postecontrole.PosteControleInt;
+import com.cgds.postecontrol.PosteDeControleController;
 import com.cgds.postecontrol.ihm.Supervision;
 import com.cgds.postecontrol.ihm.VisuSwg;
 import com.cgds.postecontrol.ihm.Visualisation;

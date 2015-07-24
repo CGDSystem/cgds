@@ -1,4 +1,4 @@
-package com.cgds.postecontrol.rmi;
+package com.cgds.postecontrol;
 
 import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
@@ -11,6 +11,7 @@ import com.cgds.interfaces.communication.CommManagerInt;
 import com.cgds.postecontrol.ihm.Supervision;
 import com.cgds.postecontrol.ihm.VisuSwg;
 import com.cgds.postecontrol.ihm.Visualisation;
+import com.cgds.postecontrol.rmi.PosteControleConnection;
 
 public class PosteDeControleController {
 
