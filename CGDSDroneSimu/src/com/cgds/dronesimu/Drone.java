@@ -10,19 +10,19 @@ import java.util.Observer;
 import com.cgds.interfaces.communication.CommDroneInt;
 import com.cgds.interfaces.communication.DroneCommunicationValue;
 import com.cgds.interfaces.drone.DroneInt;
+import com.cgds.interfaces.preparation.ParametresMission;
 
 public class Drone extends Observable implements DroneInt, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	private String nom = null;
-	private Double batterie;
-	private Double altitude;
-	private String direction;
-	private String gps;
-	private Double intensiteSignal;
-	private String mission;
-
+	private Double batterie = null;
+	private Double altitude = null;
+	private String direction = null;
+	private String gps = null;
+	private Double intensiteSignal = null;
+	private ParametresMission mission = null;
 	private byte[] image;
 
 	protected Drone(String nom) throws RemoteException {
@@ -78,11 +78,11 @@ public class Drone extends Observable implements DroneInt, Serializable {
 		this.intensiteSignal = intensiteSignal;
 	}
 
-	public String getMission() {
+	public ParametresMission getMission() {
 		return mission;
 	}
 
-	public void setMission(String mission) {
+	public void setMission(ParametresMission mission) {
 		this.mission = mission;
 	}
 
@@ -116,11 +116,11 @@ public class Drone extends Observable implements DroneInt, Serializable {
 		listeInfos.add(getDirection());
 		listeInfos.add(getGps());
 		listeInfos.add(getIntensiteSignal().toString());
-		listeInfos.add(getMission());
 		return listeInfos;
 	}
 
 	@Override
+	// Reserver au Poste de Controle
 	public void recevoirCommande(String... args) throws RemoteException {
 		System.out.println(this.getNom() + " - Commande recu : ");
 		for (String string : args) {
@@ -156,6 +156,11 @@ public class Drone extends Observable implements DroneInt, Serializable {
 			}
 		}
 
+	}
+
+	@Override
+	public ParametresMission getParametresMission() throws RemoteException {
+		return mission;
 	}
 
 }

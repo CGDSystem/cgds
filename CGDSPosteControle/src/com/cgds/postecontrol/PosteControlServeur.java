@@ -7,7 +7,6 @@ import java.rmi.registry.Registry;
 import com.cgds.interfaces.Constants;
 import com.cgds.interfaces.communication.CommManagerInt;
 import com.cgds.postecontrol.ihm.Accueil;
-import com.cgds.postecontrol.ihm.AccueilSwg;
 
 
 public class PosteControlServeur {

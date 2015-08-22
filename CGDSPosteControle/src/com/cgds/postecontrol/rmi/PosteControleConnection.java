@@ -13,7 +13,6 @@ import com.cgds.interfaces.detection.DetectionAlerteValue;
 import com.cgds.interfaces.postecontrole.PosteControleInt;
 import com.cgds.postecontrol.PosteDeControleController;
 import com.cgds.postecontrol.ihm.Supervision;
-import com.cgds.postecontrol.ihm.VisuSwg;
 import com.cgds.postecontrol.ihm.Visualisation;
 
 public class PosteControleConnection extends UnicastRemoteObject implements
@@ -25,7 +24,6 @@ public class PosteControleConnection extends UnicastRemoteObject implements
 	private static final long serialVersionUID = 1L;
 	private Supervision supervision = null;
 	private Visualisation visualisation = null;
-	private VisuSwg visuSwg = null;
 	
 	
 	private PosteDeControleController controller;
@@ -43,13 +41,6 @@ public class PosteControleConnection extends UnicastRemoteObject implements
 		this.visualisation = visualisation;
 		this.controller = controller;
 	}
-	
-	public PosteControleConnection(VisuSwg visuSwg, PosteDeControleController controller)
-			throws RemoteException {
-		super();
-		this.visuSwg = visuSwg;
-		this.controller = controller;
-	}
 
 
 	@Override
@@ -61,8 +52,7 @@ public class PosteControleConnection extends UnicastRemoteObject implements
 				supervision.update(updateMsg.getInfos());
 			if (visualisation != null && updateMsg.getImage() != null)
 				visualisation.update(updateMsg.getImage());
-			if (visuSwg != null && updateMsg.getImage() != null)
-				visuSwg.update(updateMsg.getImage());
+
 		} catch (Exception e) {
 			controller.deconnexionFermetureInterface(this);
 		}

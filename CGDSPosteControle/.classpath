@@ -12,7 +12,8 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry combineaccessrules="false" kind="src" path="/CGDSInterface"/>
-	<classpathentry kind="lib" path="D:/workspace/swt-3.6.1-win32-win32-x86_64/swt.jar"/>
-	<classpathentry kind="lib" path="D:/OpenCV/opencv/build/java/opencv-300.jar"/>
+	<classpathentry kind="lib" path="H:/workspace/librariesJava/swt4-4-2/swt.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Opencv-3.0.0"/>
+	<classpathentry kind="lib" path="H:/workspace/librariesJava/opencv/opencv/build/java/opencv_java300.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

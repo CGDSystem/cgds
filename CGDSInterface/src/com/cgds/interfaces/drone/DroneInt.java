@@ -5,6 +5,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 import com.cgds.interfaces.communication.CommDroneInt;
+import com.cgds.interfaces.preparation.ParametresMission;
 
 // Interface de l'observable du modele.
 // Les vues qui s'abonnent utilisent cette interface
@@ -16,6 +17,9 @@ public interface DroneInt extends Remote
     public String getNom() throws RemoteException;
     
     public void recevoirCommande(String... args) throws RemoteException;
+    
+    //Renvoi les parametres de la mission (Configuration)
+    public ParametresMission getParametresMission() throws RemoteException;
     
     public Boolean ping() throws RemoteException;
 }
